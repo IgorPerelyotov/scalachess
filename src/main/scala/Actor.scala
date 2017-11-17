@@ -76,6 +76,8 @@ case class Actor(
 
       case Archbishop => longRange(Bishop.dirs) ::: shortRange(Knight.dirs)
 
+      case Cancellor => longRange(Rook.dirs) ::: shortRange(Knight.dirs)
+
       case King if withCastle => shortRange(King.dirs) ::: castle
       case King => shortRange(King.dirs)
     }

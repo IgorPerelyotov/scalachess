@@ -30,6 +30,11 @@ case class Piece(color: Color, role: Role) {
       val yd = from yDist to
       (xd == 1 && yd == 2) || (xd == 2 && yd == 1)
     }) || (from onSameDiagonal to)
+    case Cancellor => (from.color != to.color && {
+      val xd = from xDist to
+      val yd = from yDist to
+      (xd == 1 && yd == 2) || (xd == 2 && yd == 1)
+    }) || (from onSameLine to)
   }
 
   // movable positions assuming empty board
