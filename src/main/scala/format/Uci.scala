@@ -36,21 +36,21 @@ object Uci
 
   object Move {
 
-    def apply(move: String): Option[Move] = for {
-      orig ← Pos.posAt(move take 2)
-      dest ← Pos.posAt(move drop 2 take 2)
+    def apply(move: String, boardType: BoardType): Option[Move] = for {
+      orig ← boardType.posAt(move take 2)
+      dest ← boardType.posAt(move drop 2 take 2)
       promotion = move lift 4 flatMap Role.promotable
     } yield Move(orig, dest, promotion)
 
-    def piotr(move: String) = for {
-      orig ← move.headOption flatMap Pos.piotr
-      dest ← move lift 1 flatMap Pos.piotr
+    def piotr(move: String, boardType: BoardType) = for {
+      orig ← move.headOption flatMap boardType.piotr
+      dest ← move lift 1 flatMap boardType.piotr
       promotion = move lift 2 flatMap Role.promotable
     } yield Move(orig, dest, promotion)
 
-    def fromStrings(origS: String, destS: String, promS: Option[String]) = for {
-      orig ← Pos.posAt(origS)
-      dest ← Pos.posAt(destS)
+    def fromStrings(origS: String, destS: String, promS: Option[String], boardType: BoardType) = for {
+      orig ← boardType.posAt(origS)
+      dest ← boardType.posAt(destS)
       promotion = Role promotable promS
     } yield Move(orig, dest, promotion)
   }
@@ -68,9 +68,9 @@ object Uci
 
   object Drop {
 
-    def fromStrings(roleS: String, posS: String) = for {
+    def fromStrings(roleS: String, posS: String, boardType: BoardType) = for {
       role ← Role.allByName get roleS
-      pos ← Pos.posAt(posS)
+      pos ← boardType.posAt(posS)
     } yield Drop(role, pos)
   }
 
@@ -80,28 +80,28 @@ object Uci
 
   def apply(drop: chess.Drop) = Uci.Drop(drop.piece.role, drop.pos)
 
-  def apply(move: String): Option[Uci] =
+  def apply(move: String, boardType: BoardType): Option[Uci] =
     if (move lift 1 contains '@') for {
       role ← move.headOption flatMap Role.allByPgn.get
-      pos ← Pos.posAt(move drop 2 take 2)
+      pos ← boardType.posAt(move drop 2 take 2)
     } yield Uci.Drop(role, pos)
-    else Uci.Move(move)
+    else Uci.Move(move, boardType)
 
-  def piotr(move: String): Option[Uci] =
+  def piotr(move: String, boardType: BoardType): Option[Uci] =
     if (move lift 1 contains '@') for {
       role ← move.headOption flatMap Role.allByPgn.get
-      pos ← move lift 2 flatMap Pos.piotr
+      pos ← move lift 2 flatMap boardType.piotr
     } yield Uci.Drop(role, pos)
-    else Uci.Move.piotr(move)
+    else Uci.Move.piotr(move, boardType)
 
-  def readList(moves: String): Option[List[Uci]] =
-    moves.split(' ').toList.map(apply).sequence
+  def readList(moves: String, boardType: BoardType): Option[List[Uci]] =
+    moves.split(' ').toList.map(x => apply(x, boardType)).sequence
 
   def writeList(moves: List[Uci]): String =
     moves.map(_.uci) mkString " "
 
-  def readListPiotr(moves: String): Option[List[Uci]] =
-    moves.split(' ').toList.map(piotr).sequence
+  def readListPiotr(moves: String, boardType: BoardType): Option[List[Uci]] =
+    moves.split(' ').toList.map(x => piotr(x, boardType)).sequence
 
   def writeListPiotr(moves: List[Uci]): String =
     moves.map(_.piotr) mkString " "

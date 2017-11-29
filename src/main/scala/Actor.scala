@@ -1,7 +1,6 @@
 package chess
 
 import format.Uci
-import Pos.posAt
 
 import scala.collection.mutable.ArrayBuffer
 import scala.annotation.tailrec
@@ -118,7 +117,7 @@ case class Actor(
     rookPos ← tripToRook.lastOption
     if board(rookPos) contains color.rook
     if history.unmovedRooks.pos.contains(rookPos)
-    newKingPos ← posAt(side.castledKingX, kingPos.y)
+    newKingPos ← board.variant.boardType.posAt(side.castledKingX, kingPos.y)
     travelPoss = kingPos <-> newKingPos
     if !travelPoss.map(board.apply).exists {
       case Some(piece) if piece == color.rook || piece == color.king => false
@@ -126,7 +125,7 @@ case class Actor(
       case _ => false
     }
     if !travelPoss.exists(p => board.variant.kingThreatened(board, !color, p))
-    newRookPos ← posAt(side.castledRookX, rookPos.y)
+    newRookPos ← board.variant.boardType.posAt(side.castledRookX, rookPos.y)
     b1 ← board take rookPos
     b2 ← newKingPos match {
       case p if p == kingPos => Some(b1)

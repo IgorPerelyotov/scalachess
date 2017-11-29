@@ -53,7 +53,7 @@ object Divider {
       if (p.role == Pawn || p.role == King) v else v + 1
     }
 
-  private val backranks = List(Pos.whiteBackrank -> Color.White, Pos.blackBackrank -> Color.Black)
+  private val backranks = List(StdBoard.whiteBackrank -> Color.White, StdBoard.blackBackrank -> Color.Black)
 
   // Sparse back-rank indicates that pieces have been developed
   private def backrankSparse(board: Board): Boolean = backranks.exists {
@@ -93,7 +93,7 @@ object Divider {
       for {
         dy <- 0 to 1
         dx <- 0 to 1
-      } yield Pos.posAt(x + dx, y + dy)
+      } yield StdBoard.posAt(x + dx, y + dy)
     }.toList.flatten
   }.toList
 

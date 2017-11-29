@@ -39,7 +39,7 @@ class CrazyhouseVariantTest extends ChessTest {
     }
 
     "autodraw" in {
-      import Pos._
+      import StdBoard._
       "tons of pointless moves but shouldn't apply 50-moves" in {
         val moves = List.fill(30)(List(B1 -> C3, B8 -> C6, C3 -> B1, C6 -> B8))
         Game(Crazyhouse).playMoves(moves.flatten: _*) must beSuccess.like {
@@ -84,7 +84,7 @@ class CrazyhouseVariantTest extends ChessTest {
     }
 
     "destinations prod bug on game VVXRgsQT" in {
-      import chess.Pos._
+      import chess.StdBoard._
       chess.Game(
         Crazyhouse.some,
         "r2q1b1r/p2k1Ppp/2p2p2/4p3/P2nP2n/3P1PRP/1PPB1K1q~/RN1Q1B2/Npb w - - 40 21".some

@@ -1,7 +1,7 @@
 package chess
 
 import scalaz.Validation.FlatMap._
-import Pos._
+import StdBoard._
 import variant._
 
 class VariantTest extends ChessTest {
@@ -136,7 +136,7 @@ K  r
       val position = "8/6K1/8/8/8/8/k6p/8 b - - 1 39"
       val game = fenToGame(position, ThreeCheck)
 
-      val successGame = game flatMap (_.playMove(Pos.H2, Pos.H1, Knight.some))
+      val successGame = game flatMap (_.playMove(StdBoard.H2, StdBoard.H1, Knight.some))
 
       successGame must beSuccess.like {
         case game =>

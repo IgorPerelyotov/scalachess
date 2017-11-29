@@ -7,7 +7,9 @@ case object FromPosition extends Variant(
   name = "From Position",
   shortName = "FEN",
   title = "Custom starting position",
-  standardInitialPosition = false
+  standardInitialPosition = false,
+  //TODO: Make possible to create Capablanca variant
+  boardType = StdBoard
 ) {
 
   def pieces = Standard.pieces

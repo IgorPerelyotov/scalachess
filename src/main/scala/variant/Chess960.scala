@@ -7,12 +7,13 @@ case object Chess960 extends Variant(
   name = "Chess960",
   shortName = "960",
   title = "Starting position of the home rank pieces is randomized.",
-  standardInitialPosition = false
+  standardInitialPosition = false,
+  boardType = StdBoard
 ) {
 
-  def pieces = Variant.symmetricRank {
-    positions(scala.util.Random.nextInt(960)) flatMap Role.allByForsyth.get
-  }
+  def pieces = Variant.symmetricRank(
+    boardType, positions(scala.util.Random.nextInt(960)) flatMap Role.allByForsyth.get
+  )
 
   def positionNumber(fen: String): Option[Int] =
     positions.indexOf(fen.takeWhile('/'!=)).some.filter(-1!=)

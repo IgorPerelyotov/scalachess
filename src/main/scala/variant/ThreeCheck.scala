@@ -7,7 +7,8 @@ case object ThreeCheck extends Variant(
   name = "Three-check",
   shortName = "3check",
   title = "Check your opponent 3 times to win the game.",
-  standardInitialPosition = true
+  standardInitialPosition = true,
+  boardType = StdBoard
 ) {
 
   def pieces = Standard.pieces

@@ -51,24 +51,24 @@ class ParserTest extends ChessTest {
 
   "glyphs" in {
     parseMove("e4") must beSuccess.like {
-      case a => a must_== Std(Pos.E4, Pawn)
+      case a => a must_== Std(StdBoard.E4, Pawn)
     }
     parseMove("e4!") must beSuccess.like {
       case a: Std =>
-        a.dest === Pos.E4
+        a.dest === StdBoard.E4
         a.role === Pawn
         a.metas.glyphs === Glyphs(Glyph.MoveAssessment.good.some, None, Nil)
     }
     parseMove("Ne7g6+?!") must beSuccess.like {
       case a: Std =>
-        a.dest === Pos.G6
+        a.dest === StdBoard.G6
         a.role === Knight
         a.metas.glyphs === Glyphs(Glyph.MoveAssessment.dubious.some, None, Nil)
     }
     parser("Ne7g6+!") must beSuccess
     parseMove("P@e4?!") must beSuccess.like {
       case a: Drop =>
-        a.pos === Pos.E4
+        a.pos === StdBoard.E4
         a.role === Pawn
         a.metas.glyphs === Glyphs(Glyph.MoveAssessment.dubious.some, None, Nil)
     }

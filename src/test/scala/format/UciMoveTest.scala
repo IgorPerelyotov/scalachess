@@ -5,8 +5,8 @@ class UciMoveTest extends ChessTest {
 
   "piotr encoding" should {
     "be reflexive" in {
-      val move = Uci.Move("a2g7").get
-      Uci.Move piotr move.piotr must_== move.some
+      val move = Uci.Move("a2g7", StdBoard).get
+      Uci.Move piotr (move.piotr, StdBoard) must_== move.some
     }
   }
 }

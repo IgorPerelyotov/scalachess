@@ -7,12 +7,13 @@ case object KingOfTheHill extends Variant(
   name = "King of the Hill",
   shortName = "KotH",
   title = "Bring your King to the center to win the game.",
-  standardInitialPosition = true
+  standardInitialPosition = true,
+  boardType = StdBoard
 ) {
 
   def pieces = Standard.pieces
 
-  private val center = Set(Pos.D4, Pos.D5, Pos.E4, Pos.E5)
+  private val center = Set(StdBoard.D4, StdBoard.D5, StdBoard.E4, StdBoard.E5)
 
   override def specialEnd(situation: Situation) =
     situation.board.kingPosOf(!situation.color) exists center.contains

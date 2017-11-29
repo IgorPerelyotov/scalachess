@@ -1,7 +1,7 @@
 package chess
 
 import scalaz.Validation.FlatMap._
-import Pos._
+import StdBoard._
 import variant.Standard
 
 class AutodrawTest extends ChessTest {
@@ -108,7 +108,7 @@ K   bB""".autoDraw must_== false
       val position = "7K/5k2/7P/6n1/8/8/8/8 b - - 0 40"
       val game = fenToGame(position, Standard)
       val newGame = game flatMap (_.playMove(
-        Pos.F7, Pos.F8
+        StdBoard.F7, StdBoard.F8
       ))
       newGame must beSuccess.like {
         case game =>
@@ -120,7 +120,7 @@ K   bB""".autoDraw must_== false
       val position = "1b5K/8/5k1P/8/8/8/8/8 b - - 0 40"
       val game = fenToGame(position, Standard)
       val newGame = game flatMap (_.playMove(
-        Pos.B8, Pos.E5
+        StdBoard.B8, StdBoard.E5
       ))
       newGame must beSuccess.like {
         case game =>
@@ -132,7 +132,7 @@ K   bB""".autoDraw must_== false
       val position = "8/8/5N2/8/6p1/8/5K1p/7k w - - 0 37"
       val game = fenToGame(position, Standard)
       val newGame = game flatMap (_.playMove(
-        Pos.F6, Pos.E4
+        StdBoard.F6, StdBoard.E4
       ))
       newGame must beSuccess.like {
         case game =>
@@ -144,7 +144,7 @@ K   bB""".autoDraw must_== false
       val position = "8/8/8/4N3/4k1p1/6K1/8/3b4 w - - 5 59"
       val game = fenToGame(position, Standard)
       val newGame = game flatMap (_.playMove(
-        Pos.E5, Pos.F7
+        StdBoard.E5, StdBoard.F7
       ))
       newGame must beSuccess.like {
         case game =>

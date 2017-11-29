@@ -1,6 +1,6 @@
 package chess
 
-import Pos._
+import StdBoard._
 
 class ClockTest extends ChessTest {
   val fakeClock60 = Clock(60, 0).copy(timestamper = new Timestamper {

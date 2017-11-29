@@ -11,7 +11,8 @@ case object Crazyhouse extends Variant(
   name = "Crazyhouse",
   shortName = "Crazy",
   title = "Captured pieces can be dropped back on the board instead of moving a piece.",
-  standardInitialPosition = true
+  standardInitialPosition = true,
+  boardType = StdBoard
 ) {
 
   def pieces = Standard.pieces

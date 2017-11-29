@@ -5,15 +5,14 @@ import scala.collection.breakOut
 import scalaz.Validation.FlatMap._
 import scalaz.Validation.failureNel
 
-import Pos.posAt
-
 abstract class Variant(
     val id: Int,
     val key: String,
     val name: String,
     val shortName: String,
     val title: String,
-    val standardInitialPosition: Boolean
+    val standardInitialPosition: Boolean,
+    val boardType: BoardType
 ) {
 
   def pieces: Map[Pos, Piece]
@@ -28,7 +27,7 @@ abstract class Variant(
   def horde = this == Horde
   def racingKings = this == RacingKings
   def crazyhouse = this == Crazyhouse
-
+  def btype: BoardType = boardType
   def exotic = !standard
 
   def allowsCastling = !castles.isEmpty
@@ -205,9 +204,9 @@ object Variant {
     chess.variant.FromPosition
   )
 
-  private[variant] def symmetricRank(rank: IndexedSeq[Role]): Map[Pos, Piece] =
+  private[variant] def symmetricRank(boardType: BoardType, rank: IndexedSeq[Role]): Map[Pos, Piece] =
     (for (y ← Seq(1, 2, 7, 8); x ← 1 to 8) yield {
-      posAt(x, y) map { pos =>
+      boardType.posAt(x, y) map { pos =>
         (pos, y match {
           case 1 => White - rank(x - 1)
           case 2 => White.pawn

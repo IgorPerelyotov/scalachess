@@ -7,7 +7,8 @@ case object Atomic extends Variant(
   name = "Atomic",
   shortName = "Atom",
   title = "Nuke your opponent's king to win.",
-  standardInitialPosition = true
+  standardInitialPosition = true,
+  boardType = StdBoard
 ) {
 
   def pieces = Standard.pieces

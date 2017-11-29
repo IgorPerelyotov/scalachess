@@ -3,18 +3,17 @@ package chess
 import scala.math.{ min, max, abs }
 import scala.collection.breakOut
 
-sealed case class Pos private (x: Int, y: Int, piotr: Char) {
+sealed case class Pos(x: Int, y: Int, piotr: Char, posType: BoardType) {
 
-  import Pos.posAt
-
-  val down: Option[Pos] = posAt(x, y - 1)
-  val left: Option[Pos] = posAt(x - 1, y)
-  val downLeft: Option[Pos] = posAt(x - 1, y - 1)
-  val downRight: Option[Pos] = posAt(x + 1, y - 1)
-  lazy val up: Option[Pos] = posAt(x, y + 1)
-  lazy val right: Option[Pos] = posAt(x + 1, y)
-  lazy val upLeft: Option[Pos] = posAt(x - 1, y + 1)
-  lazy val upRight: Option[Pos] = posAt(x + 1, y + 1)
+  def xToString(a: Int) = (96 + a).toChar.toString
+  val down: Option[Pos] = posType.posAt(x, y - 1)
+  val left: Option[Pos] = posType.posAt(x - 1, y)
+  val downLeft: Option[Pos] = posType.posAt(x - 1, y - 1)
+  val downRight: Option[Pos] = posType.posAt(x + 1, y - 1)
+  lazy val up: Option[Pos] = posType.posAt(x, y + 1)
+  lazy val right: Option[Pos] = posType.posAt(x + 1, y)
+  lazy val upLeft: Option[Pos] = posType.posAt(x - 1, y + 1)
+  lazy val upRight: Option[Pos] = posType.posAt(x + 1, y + 1)
 
   def >|(stop: Pos => Boolean): List[Pos] = |<>|(stop, _.right)
   def |<(stop: Pos => Boolean): List[Pos] = |<>|(stop, _.left)
@@ -30,7 +29,7 @@ sealed case class Pos private (x: Int, y: Int, piotr: Char) {
   def ?-(other: Pos): Boolean = y == other.y
 
   def <->(other: Pos): Iterable[Pos] =
-    min(x, other.x) to max(x, other.x) flatMap { posAt(_, y) }
+    min(x, other.x) to max(x, other.x) flatMap { posType.posAt(_, y) }
 
   def touches(other: Pos): Boolean = xDist(other) <= 1 && yDist(other) <= 1
 
@@ -40,7 +39,7 @@ sealed case class Pos private (x: Int, y: Int, piotr: Char) {
   def xDist(other: Pos) = abs(x - other.x)
   def yDist(other: Pos) = abs(y - other.y)
 
-  val file = Pos xToString x
+  val file = xToString(x)
   val rank = y.toString
   val key = file + rank
   val color = Color((x % 2 == 0) ^ (y % 2 == 0))
@@ -51,7 +50,7 @@ sealed case class Pos private (x: Int, y: Int, piotr: Char) {
   override val hashCode = 8 * (y - 1) + (x - 1)
 }
 
-object Pos {
+object StdBoard extends BoardType {
   val posCache = new Array[Some[Pos]](64)
 
   def posAt(x: Int, y: Int): Option[Pos] =
@@ -75,7 +74,7 @@ object Pos {
   } yield s"${a.key}${b.key}"
 
   private[this] def createPos(x: Int, y: Int, piotr: Char): Pos = {
-    val pos = new Pos(x, y, piotr)
+    val pos = new Pos(x, y, piotr, this)
     posCache(x + 8 * y - 9) = Some(pos)
     pos
   }
@@ -147,7 +146,7 @@ object Pos {
 
   val all = posCache.toList.flatten
 
-  val whiteBackrank = (A1 <-> H1).toList
+  override val whiteBackrank = (A1 <-> H1).toList
   val blackBackrank = (A8 <-> H8).toList
 
   val allKeys: Map[String, Pos] = all.map { pos => pos.key -> pos }(breakOut)

@@ -1,0 +1,5 @@
+package variant
+
+class Capablanca {
+
+}

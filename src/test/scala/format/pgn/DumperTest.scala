@@ -2,7 +2,7 @@ package chess
 package format.pgn
 
 import format.Forsyth
-import Pos._
+import StdBoard._
 
 class DumperTest extends ChessTest {
 
@@ -14,7 +14,7 @@ class DumperTest extends ChessTest {
           turns = turns
         )
       }
-      val move = game(Pos.F2, Pos.F4).toOption.get._2
+      val move = game(StdBoard.F2, StdBoard.F4).toOption.get._2
       Dumper(move) must_== "f4+"
     }
   }
@@ -251,7 +251,7 @@ NRKNRQBB
       val fen = """r5k1/1b5p/N3p1p1/Q4p2/4r3/2P1q3/1PK2RP1/5R2 w - - 1 38"""
       val sit = chess.format.Forsyth.<<(fen).get
       val game1 = Game(sit.board, sit.color)
-      val (game2, move) = game1(Pos.F2, Pos.F3).toOption.get
+      val (game2, move) = game1(StdBoard.F2, StdBoard.F3).toOption.get
       Dumper(game1.situation, move, game2.situation) must_== "Rf3"
     }
   }

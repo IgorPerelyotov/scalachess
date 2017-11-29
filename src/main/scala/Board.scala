@@ -1,10 +1,17 @@
 package chess
 
-import Pos.posAt
 import scala.collection.breakOut
 import scalaz.Validation.FlatMap._
 import scalaz.Validation.{ failureNel, success }
 import variant.{ Variant, Crazyhouse }
+
+trait BoardType {
+  def posAt(key: String): Option[Pos]
+  def posAt(x: Int, y: Int): Option[Pos]
+  val whiteBackrank: List[Pos]
+  val blackBackrank: List[Pos]
+  def piotr(c: Char): Option[Pos]
+}
 
 case class Board(
     pieces: PieceMap,
@@ -17,7 +24,7 @@ case class Board(
 
   def apply(at: Pos): Option[Piece] = pieces get at
 
-  def apply(x: Int, y: Int): Option[Piece] = posAt(x, y) flatMap pieces.get
+  def apply(x: Int, y: Int): Option[Piece] = variant.boardType.posAt(x, y) flatMap pieces.get
 
   lazy val actors: Map[Pos, Actor] = pieces map {
     case (pos, piece) => (pos, Actor(piece, pos, this))

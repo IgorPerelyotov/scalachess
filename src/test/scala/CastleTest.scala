@@ -1,7 +1,7 @@
 package chess
 
 import scalaz.Validation.FlatMap._
-import Pos._
+import StdBoard._
 
 class CastleTest extends ChessTest {
 

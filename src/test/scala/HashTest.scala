@@ -1,6 +1,6 @@
 package chess
 
-import Pos._
+import StdBoard._
 import format.Uci
 import variant.{ Standard, Crazyhouse, ThreeCheck, Antichess, Atomic }
 
@@ -113,7 +113,7 @@ class HashTest extends ChessTest {
       // from https://lichess.org/j4r7XHTB/black
       val fen = "r2qkb1r/ppp1pppp/2n2n2/3p2B1/3P2b1/4PN2/PPP1BPPP/RN1QK2R/ b KQkq - 9 5"
       val situation = ((format.Forsyth << fen) get) withVariant Crazyhouse
-      val move = situation.move(Pos.G4, Pos.F3, None).toOption.get
+      val move = situation.move(StdBoard.G4, StdBoard.F3, None).toOption.get
       val hashAfterMove = hash(move.situationAfter)
 
       // 5 ... Bxf3
@@ -127,7 +127,7 @@ class HashTest extends ChessTest {
     "be consistent when king is captured in antichess" in {
       val fen = "rnbqkb1r/ppp1pppp/3p1n2/1B6/8/4P3/PPPP1PPP/RNBQK1NR w KQkq - 2 3"
       val situation = ((format.Forsyth << fen) get) withVariant Antichess
-      val move = situation.move(Pos.B5, Pos.E8, None).toOption.get
+      val move = situation.move(StdBoard.B5, StdBoard.E8, None).toOption.get
       val hashAfterMove = hash(move.situationAfter)
 
       // 3. BxK
@@ -141,7 +141,7 @@ class HashTest extends ChessTest {
     "be consistent when rook is exploded in atomic" in {
       val fen = "rnbqkb1r/ppppp1pp/5p1n/6N1/8/8/PPPPPPPP/RNBQKB1R w KQkq - 2 3"
       val situation = format.Forsyth.<<@(Atomic, fen).get
-      val move = situation.move(Pos.G5, Pos.H7, None).toOption.get
+      val move = situation.move(StdBoard.G5, StdBoard.H7, None).toOption.get
       val hashAfterMove = hash(move.situationAfter)
 
       // 3. Nxh7

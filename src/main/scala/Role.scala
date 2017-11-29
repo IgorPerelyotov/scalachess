@@ -1,7 +1,5 @@
 package chess
 
-import Pos.posAt
-
 sealed trait Role {
   val forsyth: Char
   lazy val forsythUpper: Char = forsyth.toUpper
@@ -10,6 +8,7 @@ sealed trait Role {
   val projection: Boolean
   val dirs: Directions
   def dir(from: Pos, to: Pos): Option[Direction]
+  val boardType: BoardType
 }
 sealed trait PromotableRole extends Role
 
@@ -21,6 +20,7 @@ case object King extends PromotableRole {
   val dirs: Directions = Queen.dirs
   def dir(from: Pos, to: Pos) = None
   val projection = false
+  val boardType = StdBoard
 }
 
 case object Queen extends PromotableRole {
@@ -28,9 +28,11 @@ case object Queen extends PromotableRole {
   val dirs: Directions = Rook.dirs ::: Bishop.dirs
   def dir(from: Pos, to: Pos) = Rook.dir(from, to) orElse Bishop.dir(from, to)
   val projection = true
+  val boardType = StdBoard
 }
 case object Rook extends PromotableRole {
   val forsyth = 'r'
+  val boardType = StdBoard
   val dirs: Directions = List(_.up, _.down, _.left, _.right)
   def dir(from: Pos, to: Pos) = if (to ?| from) Some(
     if (to ?^ from) (_.up) else (_.down)
@@ -43,6 +45,7 @@ case object Rook extends PromotableRole {
 }
 case object Bishop extends PromotableRole {
   val forsyth = 'b'
+  val boardType = StdBoard
   val dirs: Directions = List(_.upLeft, _.upRight, _.downLeft, _.downRight)
   def dir(from: Pos, to: Pos) = if (to onSameDiagonal from) Some(
     if (to ?^ from) {
@@ -56,15 +59,16 @@ case object Bishop extends PromotableRole {
 }
 case object Knight extends PromotableRole {
   val forsyth = 'n'
+  val boardType = StdBoard
   val dirs: Directions = List(
-    p => posAt(p.x - 1, p.y + 2),
-    p => posAt(p.x - 1, p.y - 2),
-    p => posAt(p.x + 1, p.y + 2),
-    p => posAt(p.x + 1, p.y - 2),
-    p => posAt(p.x - 2, p.y + 1),
-    p => posAt(p.x - 2, p.y - 1),
-    p => posAt(p.x + 2, p.y + 1),
-    p => posAt(p.x + 2, p.y - 1)
+    p => boardType.posAt(p.x - 1, p.y + 2),
+    p => boardType.posAt(p.x - 1, p.y - 2),
+    p => boardType.posAt(p.x + 1, p.y + 2),
+    p => boardType.posAt(p.x + 1, p.y - 2),
+    p => boardType.posAt(p.x - 2, p.y + 1),
+    p => boardType.posAt(p.x - 2, p.y - 1),
+    p => boardType.posAt(p.x + 2, p.y + 1),
+    p => boardType.posAt(p.x + 2, p.y - 1)
   )
   def dir(from: Pos, to: Pos) = None
   val projection = false
@@ -74,18 +78,21 @@ case object Pawn extends Role {
   val dirs: Directions = Nil
   def dir(from: Pos, to: Pos) = None
   val projection = false
+  val boardType = StdBoard
 }
 case object Archbishop extends PromotableRole {
   val forsyth = 'a'
   val dirs: Directions = Bishop.dirs ::: Knight.dirs
   def dir(from: Pos, to: Pos) = Bishop.dir(from, to) orElse Knight.dir(from, to)
   val projection = false
+  val boardType = StdBoard
 }
 case object Cancellor extends PromotableRole {
   val forsyth = 'c'
   val dirs: Directions = Rook.dirs ::: Knight.dirs
   def dir(from: Pos, to: Pos) = Rook.dir(from, to) orElse Knight.dir(from, to)
   val projection = false
+  val boardType = StdBoard
 }
 object Role {
 

@@ -9,7 +9,8 @@ case object Antichess extends Variant(
   name = "Antichess",
   shortName = "Anti",
   title = "Lose all your pieces (or reach a stalemate) to win the game.",
-  standardInitialPosition = true
+  standardInitialPosition = true,
+  boardType = StdBoard
 ) {
 
   def pieces = Standard.pieces

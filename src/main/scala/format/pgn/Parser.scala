@@ -146,13 +146,13 @@ object Parser extends scalaz.syntax.ToTraverseOps {
     private val DropR = """^(N|B|R|Q|P)@([a-h][1-8])(\+?)(\#?)$""".r
 
     def apply(str: String, variant: Variant): Valid[San] = {
-      if (str.size == 2) Pos.posAt(str).fold(slow(str)) { pos => succezz(Std(pos, Pawn)) }
+      if (str.size == 2) variant.boardType.posAt(str).fold(slow(str)) { pos => succezz(Std(pos, Pawn)) }
       else str match {
         case "O-O" | "o-o" | "0-0" => succezz(Castle(KingSide))
         case "O-O-O" | "o-o-o" | "0-0-0" => succezz(Castle(QueenSide))
         case MoveR(role, file, rank, capture, pos, prom, check, mate) =>
           role.headOption.fold[Option[Role]](Some(Pawn))(variant.rolesByPgn.get) flatMap { role =>
-            Pos posAt pos map { dest =>
+            variant.boardType.posAt(pos) map { dest =>
               succezz(Std(
                 dest = dest,
                 role = role,
@@ -172,7 +172,7 @@ object Parser extends scalaz.syntax.ToTraverseOps {
           } getOrElse slow(str)
         case DropR(roleS, posS, check, mate) =>
           roleS.headOption flatMap variant.rolesByPgn.get flatMap { role =>
-            Pos posAt posS map { pos =>
+            variant.boardType.posAt(posS) map { pos =>
               succezz(Drop(
                 role = role,
                 pos = pos,
@@ -282,7 +282,7 @@ object Parser extends scalaz.syntax.ToTraverseOps {
 
     val promotable = Role.allPromotableByPgn mapKeys (_.toUpper)
 
-    val dest = mapParser(Pos.allKeys, "dest")
+    val dest = mapParser(StdBoard.allKeys, "dest")
 
     def exists(c: String): Parser[Boolean] = c ^^^ true | success(false)
 

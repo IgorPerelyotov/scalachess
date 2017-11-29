@@ -1,6 +1,6 @@
 package chess
 
-import chess.Pos._
+import StdBoard._
 
 class CancellorTest extends ChessTest {
 

@@ -1,7 +1,7 @@
 package chess
 package format
 
-import Pos._
+import StdBoard._
 
 class VisualTest extends ChessTest {
 

@@ -7,7 +7,8 @@ case object RacingKings extends Variant(
   name = "Racing Kings",
   shortName = "Racing",
   title = "Race your King to the eighth rank to win.",
-  standardInitialPosition = false
+  standardInitialPosition = false,
+  boardType = StdBoard
 ) {
 
   override def allowsCastling = false
@@ -16,22 +17,22 @@ case object RacingKings extends Variant(
   // krbnNBRK
   // qrbnNBRQ
   override val pieces: Map[Pos, Piece] = Map(
-    Pos.A1 -> Black.queen,
-    Pos.A2 -> Black.king,
-    Pos.B1 -> Black.rook,
-    Pos.B2 -> Black.rook,
-    Pos.C1 -> Black.bishop,
-    Pos.C2 -> Black.bishop,
-    Pos.D1 -> Black.knight,
-    Pos.D2 -> Black.knight,
-    Pos.E1 -> White.knight,
-    Pos.E2 -> White.knight,
-    Pos.F1 -> White.bishop,
-    Pos.F2 -> White.bishop,
-    Pos.G1 -> White.rook,
-    Pos.G2 -> White.rook,
-    Pos.H1 -> White.queen,
-    Pos.H2 -> White.king
+    StdBoard.A1 -> Black.queen,
+    StdBoard.A2 -> Black.king,
+    StdBoard.B1 -> Black.rook,
+    StdBoard.B2 -> Black.rook,
+    StdBoard.C1 -> Black.bishop,
+    StdBoard.C2 -> Black.bishop,
+    StdBoard.D1 -> Black.knight,
+    StdBoard.D2 -> Black.knight,
+    StdBoard.E1 -> White.knight,
+    StdBoard.E2 -> White.knight,
+    StdBoard.F1 -> White.bishop,
+    StdBoard.F2 -> White.bishop,
+    StdBoard.G1 -> White.rook,
+    StdBoard.G2 -> White.rook,
+    StdBoard.H1 -> White.queen,
+    StdBoard.H2 -> White.king
   )
 
   override val castles = Castles.none

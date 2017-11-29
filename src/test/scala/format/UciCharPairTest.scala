@@ -1,7 +1,7 @@
 package chess
 package format
 
-import Pos._
+import StdBoard._
 import Uci._
 
 class UciCharPairTest extends ChessTest {
@@ -15,8 +15,8 @@ class UciCharPairTest extends ChessTest {
     def conv(uci: Uci) = UciCharPair(uci).toString
 
     val allMoves = for {
-      orig <- Pos.all
-      dest <- Pos.all
+      orig <- StdBoard.all
+      dest <- StdBoard.all
     } yield Move(orig, dest)
     val allPairs = allMoves.map(conv)
 
