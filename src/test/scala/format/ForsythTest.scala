@@ -407,4 +407,9 @@ class ForsythTest extends ChessTest {
       f exportCastles board must_== "-"
     }
   }
+  "Capablanca chess" in {
+    f <<@ (Capablanca, "rnabqkbcnr/pppppppppp/10/10/10/10/PPPPPPPPPP/RNABQKBCNR w KQkq - 0 1") must beSome.like {
+      case s => s.actors.contains(Cancellor) must beTrue
+    }
+  }
 }
