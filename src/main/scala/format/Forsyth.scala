@@ -1,7 +1,7 @@
 package chess
 package format
 
-import variant.{ Variant, Standard }
+import variant.{ Capablanca, Standard, Variant }
 
 /**
  * Transform a game to standard Forsyth Edwards Notation
@@ -46,12 +46,12 @@ object Forsyth {
         val sixthRank = if (situation.color == White) 6 else 3
         val seventhRank = if (situation.color == White) 7 else 2
         val lastMove = for {
-          pos <- splitted lift 3 flatMap Pos.posAt
+          pos <- splitted lift 3 flatMap StdBoard.posAt
           if (pos.y == sixthRank)
-          orig <- Pos.posAt(pos.x, seventhRank)
-          dest <- Pos.posAt(pos.x, fifthRank)
+          orig <- StdBoard.posAt(pos.x, seventhRank)
+          dest <- StdBoard.posAt(pos.x, fifthRank)
           if (situation.board(dest).contains(Piece(!situation.color, Pawn)))
-          if (Pos.posAt(pos.x, sixthRank).flatMap(situation.board.apply).isEmpty)
+          if (StdBoard.posAt(pos.x, sixthRank).flatMap(situation.board.apply).isEmpty)
           if (situation.board(orig).isEmpty)
         } yield Uci.Move(orig, dest)
 
@@ -114,7 +114,7 @@ object Forsyth {
         }
       case word => word -> None
     }
-    makePiecesWithCrazyPromoted(position.toList, 1, 8) map {
+    makePiecesWithCrazyPromoted(variant, position.toList, 1, 8) map {
       case (pieces, promoted) =>
         val board = Board(pieces, variant = variant)
         if (promoted.isEmpty) board else board.withCrazyData(_.copy(promoted = promoted))
@@ -132,19 +132,20 @@ object Forsyth {
     }
   }
 
-  private def makePiecesWithCrazyPromoted(chars: List[Char], x: Int, y: Int): Option[(List[(Pos, Piece)], Set[Pos])] = chars match {
+  private def makePiecesWithCrazyPromoted(variant: Variant, chars: List[Char], x: Int, y: Int): Option[(List[(Pos, Piece)], Set[Pos])] = chars match {
     case Nil => Some((Nil, Set.empty))
-    case '/' :: rest => makePiecesWithCrazyPromoted(rest, 1, y - 1)
-    case c :: rest if '1' <= c && c <= '9' => makePiecesWithCrazyPromoted(rest, x + (c - '0').toInt, y)
+    case '/' :: rest => makePiecesWithCrazyPromoted(variant, rest, 1, y - 1)
+    case '0' :: rest if variant == Capablanca => makePiecesWithCrazyPromoted(variant, rest, x + 9, y)
+    case c :: rest if '1' <= c && c <= '9' => makePiecesWithCrazyPromoted(variant, rest, x + (c - '0').toInt, y)
     case c :: '~' :: rest => for {
-      pos <- Pos.posAt(x, y)
+      pos <- variant.boardType.posAt(x, y)
       piece <- Piece.fromChar(c)
-      (nextPieces, nextPromoted) <- makePiecesWithCrazyPromoted(rest, x + 1, y)
+      (nextPieces, nextPromoted) <- makePiecesWithCrazyPromoted(variant, rest, x + 1, y)
     } yield (pos -> piece :: nextPieces, nextPromoted + pos)
     case c :: rest => for {
-      pos <- Pos.posAt(x, y)
+      pos <- variant.boardType.posAt(x, y)
       piece <- Piece.fromChar(c)
-      (nextPieces, nextPromoted) <- makePiecesWithCrazyPromoted(rest, x + 1, y)
+      (nextPieces, nextPromoted) <- makePiecesWithCrazyPromoted(variant, rest, x + 1, y)
     } yield (pos -> piece :: nextPieces, nextPromoted)
   }
 
