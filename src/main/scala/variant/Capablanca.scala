@@ -8,7 +8,7 @@ case object Capablanca extends Variant(
   shortName = "Capa",
   title = "Variant with two additional pieces",
   standardInitialPosition = true,
-  boardType = StdBoard
+  boardType = CapaBoard
 ) {
   def pieces = Standard.pieces
 }
