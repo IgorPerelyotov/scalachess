@@ -2,7 +2,6 @@ package chess
 package format
 
 import Forsyth.SituationPlus
-import StdBoard._
 import variant._
 
 class ForsythTest extends ChessTest {
@@ -10,6 +9,7 @@ class ForsythTest extends ChessTest {
   val f = Forsyth
 
   "the forsyth notation" should {
+    import StdBoard._
     "export" in {
       "game opening" in {
         val moves = List(E2 -> E4, C7 -> C5, G1 -> F3, G8 -> H6, A2 -> A3)
@@ -273,6 +273,7 @@ class ForsythTest extends ChessTest {
     }
   }
   "crazyhouse" should {
+    import StdBoard._
     import variant.Crazyhouse._
     "read" in {
       "nope" in {
@@ -332,6 +333,7 @@ class ForsythTest extends ChessTest {
     }
   }
   "three-check" should {
+    import StdBoard._
     import variant.ThreeCheck
     "write" in {
       "no checks" in {
@@ -379,6 +381,7 @@ class ForsythTest extends ChessTest {
     }
   }
   "x-fen" should {
+    import StdBoard._
     "wikipedia example" in {
       val canonical = "rn2k1r1/ppp1pp1p/3p2p1/5bn1/P7/2N2B2/1PPPPP2/2BNK1RR w Gkq - 4 11"
       f <<< canonical must beSome.like {
@@ -407,9 +410,55 @@ class ForsythTest extends ChessTest {
       f exportCastles board must_== "-"
     }
   }
-  "Capablanca chess" in {
-    f <<@ (Capablanca, "rnabqkbcnr/pppppppppp/10/10/10/10/PPPPPPPPPP/RNABQKBCNR w KQkq - 0 1") must beSome.like {
-      case s => s.actors.contains(Cancellor) must beTrue
+  "Capablanca chess" should {
+    import CapaBoard._
+    "import" in {
+      val moves = List(C2 -> C4, H7 -> H5, C1 -> B3, H8 -> H6, F2 -> F3)
+      def compare(ms: List[(Pos, Pos)], fen: String) =
+        makeGame(Capablanca).playMoveList(ms) must beSuccess.like {
+          case g => (f <<@ (Capablanca, fen)) must beSome.like {
+            case situation => situation.board.visual must_== g.situation.board.visual
+          }
+        }
+      "new game" in {
+        compare(
+          Nil,
+          "rnabqkbcnr/pppppppppp/10/10/10/10/PPPPPPPPPP/RNABQKBCNR w KQkq - 0 1"
+        )
+      }
+      "one move" in {
+        compare(
+          moves take 1,
+          "rnabqkbcnr/pppppppppp/10/10/2P7/10/PP1PPPPPPP/RNABQKBCNR b KQkq c3 0 1"
+        )
+      }
+      "2 moves" in {
+        compare(
+          moves take 2,
+          "rnabqkbcnr/ppppppp1pp/10/7p2/2P7/10/PP1PPPPPPP/RNABQKBCNR w KQkq h6 0 2"
+        )
+      }
+      "3 moves" in {
+        compare(
+          moves take 3,
+          "rnabqkbcnr/ppppppp1pp/10/7p2/2P7/1A8/PP1PPPPPPP/RN1BQKBCNR b KQkq - 1 2"
+        )
+      }
+      "4 moves" in {
+        compare(
+          moves take 4,
+          "rnabqkb1nr/ppppppp1pp/7c2/7p2/2P7/1A8/PP1PPPPPPP/RN1BQKBCNR w KQkq - 2 3"
+        )
+      }
+      "5 moves" in {
+        compare(
+          moves take 5,
+          "rnabqkb1nr/ppppppp1pp/7c2/7p2/2P7/1A3P4/PP1PP1PPPP/RN1BQKBCNR w KQkq - 0 3"
+        )
+      }
+      "invalid" in {
+        f << "hahaha" must beNone
+      }
     }
   }
 }

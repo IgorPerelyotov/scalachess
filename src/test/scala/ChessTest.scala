@@ -85,6 +85,7 @@ trait ChessTest extends Specification with ValidationMatchers {
     Visual << str withVariant variant
 
   def makeBoard: Board = Board init chess.variant.Standard
+  def makeBoard(variant: Variant): Board = Board init variant
 
   def makeEmptyBoard: Board = Board empty chess.variant.Standard
 
@@ -93,6 +94,7 @@ trait ChessTest extends Specification with ValidationMatchers {
   }
 
   def makeGame: Game = Game(makeBoard, White)
+  def makeGame(variant: Variant): Game = Game(makeBoard(variant), White)
 
   def bePoss(board: Board, visual: String): Matcher[Option[Iterable[Pos]]] = beSome.like {
     case p => Visual.addNewLines(Visual.>>|(board, Map(p -> 'x'))) must_== visual
