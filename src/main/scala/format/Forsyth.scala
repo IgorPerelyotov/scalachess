@@ -46,12 +46,12 @@ object Forsyth {
         val sixthRank = if (situation.color == White) 6 else 3
         val seventhRank = if (situation.color == White) 7 else 2
         val lastMove = for {
-          pos <- splitted lift 3 flatMap StdBoard.posAt
+          pos <- splitted lift 3 flatMap variant.boardType.posAt
           if (pos.y == sixthRank)
-          orig <- StdBoard.posAt(pos.x, seventhRank)
-          dest <- StdBoard.posAt(pos.x, fifthRank)
+          orig <- variant.boardType.posAt(pos.x, seventhRank)
+          dest <- variant.boardType.posAt(pos.x, fifthRank)
           if (situation.board(dest).contains(Piece(!situation.color, Pawn)))
-          if (StdBoard.posAt(pos.x, sixthRank).flatMap(situation.board.apply).isEmpty)
+          if (variant.boardType.posAt(pos.x, sixthRank).flatMap(situation.board.apply).isEmpty)
           if (situation.board(orig).isEmpty)
         } yield Uci.Move(orig, dest)
 
