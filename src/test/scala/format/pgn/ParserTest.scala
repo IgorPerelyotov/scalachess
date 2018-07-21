@@ -310,5 +310,17 @@ class ParserTest extends ChessTest {
         case parsed => parsed.tags.year must_== Some(1978)
       }
     }
+    "capablanca chess variant" should {
+      "archbishop moves" in {
+        parser("Ad3") must beSuccess.like {
+          case a => a must_== Std(CapaBoard.D3, Archbishop)
+        }
+      }
+      "cancellor moves" in {
+        parser("Ci3") must beSuccess.like {
+          case a => a must_== Std(CapaBoard.I3, Cancellor)
+        }
+      }
+    }
   }
 }
