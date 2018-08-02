@@ -18,9 +18,7 @@ case class CheckCount(white: Int = 0, black: Int = 0) {
 case class UnmovedRooks(pos: Set[Pos]) extends AnyVal
 
 object UnmovedRooks {
-  def apply(pos: Set[Pos]) = new UnmovedRooks(pos)
-  def apply(boardType: BoardType) = new UnmovedRooks((boardType.whiteBackrank ::: boardType.blackBackrank).toSet)
-  val default = UnmovedRooks(StdBoard)
+  val default = UnmovedRooks((StdBoard.whiteBackrank ::: StdBoard.blackBackrank).toSet)
 }
 
 case class History(
@@ -87,10 +85,9 @@ object History {
 
   def make(
     lastMove: Option[String], // a2a4
-    castles: String,
-    boardType: BoardType
+    castles: String
   ): History = History(
-    lastMove = lastMove flatMap (x => Uci.apply(x, boardType)),
+    lastMove = lastMove flatMap (Uci.apply(_, StdBoard)),
     castles = Castles(castles),
     positionHashes = Array()
   )
