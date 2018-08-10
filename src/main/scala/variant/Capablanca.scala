@@ -2,12 +2,12 @@ package chess
 package variant
 
 case object Capablanca extends Variant(
-  id = 6,
+  id = 11,
   key = "capablanca",
   name = "Capablanca",
   shortName = "Capa",
   title = "Variant with two additional pieces",
-  standardInitialPosition = true,
+  standardInitialPosition = false,
   boardType = CapaBoard
 ) {
 
