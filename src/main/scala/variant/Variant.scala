@@ -205,7 +205,7 @@ object Variant {
   )
 
   private[variant] def symmetricRank(boardType: BoardType, rank: IndexedSeq[Role]): Map[Pos, Piece] =
-    (for (y ← Seq(1, 2, 7, 8); x ← 1 to boardType.width) yield {
+    (for (y ← Seq(1, 2, 7, 8); x ← 1 to boardType.files) yield {
       boardType.posAt(x, y) map { pos =>
         (pos, y match {
           case 1 => White - rank(x - 1)

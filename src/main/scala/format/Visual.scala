@@ -38,8 +38,8 @@ object Visual {
     val markedPoss: Map[Pos, Char] = marks.foldLeft(Map[Pos, Char]()) {
       case (marks, (poss, char)) => marks ++ (poss.toList map { pos => (pos, char) })
     }
-    for (y ← board.variant.boardType.width to 1 by -1) yield {
-      for (x ← 1 to board.variant.boardType.width) yield {
+    for (y ← board.variant.boardType.ranks to 1 by -1) yield {
+      for (x ← 1 to board.variant.boardType.files) yield {
         board.variant.boardType.posAt(x, y) flatMap markedPoss.get getOrElse board(x, y).fold(' ')(_ forsyth)
       }
     } mkString

@@ -10,7 +10,8 @@ trait BoardType {
   def posAt(x: Int, y: Int): Option[Pos]
   val whiteBackrank: List[Pos]
   val blackBackrank: List[Pos]
-  val width: Int
+  val ranks: Int
+  val files: Int
   def piotr(c: Char): Option[Pos]
 }
 
