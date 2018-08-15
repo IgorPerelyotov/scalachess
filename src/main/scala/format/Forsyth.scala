@@ -196,7 +196,6 @@ object Forsyth {
     lazy val br = board.pieces.collect {
       case (pos, piece) if pos.y == Black.backrankY && piece == Black.rook => pos
     }
-
     lazy val wur = board.unmovedRooks.pos.filter(_.y == White.backrankY)
     lazy val bur = board.unmovedRooks.pos.filter(_.y == Black.backrankY)
 
@@ -215,9 +214,9 @@ object Forsyth {
   def exportBoard(board: Board): String = {
     val fen = new scala.collection.mutable.StringBuilder(70)
     var empty = 0
-    for (y ← 8 to 1 by -1) {
+    for (y ← board.variant.boardType.ranks to 1 by -1) {
       empty = 0
-      for (x <- 1 to 8) {
+      for (x <- 1 to board.variant.boardType.files) {
         board(x, y) match {
           case None => empty = empty + 1
           case Some(piece) =>
