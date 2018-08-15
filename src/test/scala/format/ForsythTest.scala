@@ -460,5 +460,41 @@ class ForsythTest extends ChessTest {
         f << "hahaha" must beNone
       }
     }
+    "export" in {
+      "game opening" in {
+        val moves = List(C2 -> C4, H7 -> H5, C1 -> B3, H8 -> H6, F2 -> F3)
+        "new game" in {
+          f >> makeGame(Capablanca) must_== "rnabqkbcnr/pppppppppp/10/10/10/10/PPPPPPPPPP/RNABQKBCNR w KQkq - 0 1"
+        }
+        "new game board only" in {
+          f exportBoard makeBoard(Capablanca) must_== "rnabqkbcnr/pppppppppp/10/10/10/10/PPPPPPPPPP/RNABQKBCNR"
+        }
+        "one move" in {
+          makeGame(Capablanca).playMoveList(moves take 1) must beSuccess.like {
+            case g => f >> g must_== "rnabqkbcnr/pppppppppp/10/10/2P7/10/PP1PPPPPPP/RNABQKBCNR b KQkq - 0 1"
+          }
+        }
+        "2 moves" in {
+          makeGame(Capablanca).playMoveList(moves take 2) must beSuccess.like {
+            case g => f >> g must_== "rnabqkbcnr/ppppppp1pp/10/7p2/2P7/10/PP1PPPPPPP/RNABQKBCNR w KQkq - 0 2"
+          }
+        }
+        "3 moves" in {
+          makeGame(Capablanca).playMoveList(moves take 3) must beSuccess.like {
+            case g => f >> g must_== "rnabqkbcnr/ppppppp1pp/10/7p2/2P7/1A8/PP1PPPPPPP/RN1BQKBCNR b KQkq - 1 2"
+          }
+        }
+        "4 moves" in {
+          makeGame(Capablanca).playMoveList(moves take 4) must beSuccess.like {
+            case g => f >> g must_== "rnabqkb1nr/ppppppp1pp/7c2/7p2/2P7/1A8/PP1PPPPPPP/RN1BQKBCNR w KQkq - 2 3"
+          }
+        }
+        "5 moves" in {
+          makeGame(Capablanca).playMoveList(moves take 5) must beSuccess.like {
+            case g => f >> g must_== "rnabqkb1nr/ppppppp1pp/7c2/7p2/2P7/1A3P4/PP1PP1PPPP/RN1BQKBCNR b KQkq - 0 3"
+          }
+        }
+      }
+    }
   }
 }
