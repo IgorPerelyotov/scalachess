@@ -19,6 +19,7 @@ case class UnmovedRooks(pos: Set[Pos]) extends AnyVal
 
 object UnmovedRooks {
   val default = UnmovedRooks((StdBoard.whiteBackrank ::: StdBoard.blackBackrank).toSet)
+  val CapaDefault = UnmovedRooks((CapaBoard.whiteBackrank ::: CapaBoard.blackBackrank).toSet)
 }
 
 case class History(

@@ -3,7 +3,7 @@ package chess
 import scala.collection.breakOut
 import scalaz.Validation.FlatMap._
 import scalaz.Validation.{ failureNel, success }
-import variant.{ Variant, Crazyhouse }
+import variant.{ Variant, Crazyhouse, Capablanca }
 
 trait BoardType {
   def posAt(key: String): Option[Pos]
@@ -189,9 +189,13 @@ object Board {
   def apply(pieces: Traversable[(Pos, Piece)], variant: Variant): Board =
     Board(pieces.toMap, if (variant.allowsCastling) Castles.all else Castles.none, variant)
 
-  def apply(pieces: Traversable[(Pos, Piece)], castles: Castles, variant: Variant): Board =
-    Board(pieces.toMap, History(castles = castles), variant, variantCrazyData(variant))
-
+  def apply(pieces: Traversable[(Pos, Piece)], castles: Castles, variant: Variant): Board = {
+    val unmovedRooks = variant match {
+      case Capablanca => UnmovedRooks.CapaDefault
+      case _ => UnmovedRooks.default
+    }
+    Board(pieces.toMap, History(castles = castles, unmovedRooks = unmovedRooks), variant, variantCrazyData(variant))
+  }
   def init(variant: Variant): Board = Board(variant.pieces, variant.castles, variant)
 
   def empty(variant: Variant): Board = Board(Nil, variant)
