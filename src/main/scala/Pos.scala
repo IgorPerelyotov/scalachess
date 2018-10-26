@@ -152,7 +152,7 @@ object StdBoard extends BoardType {
   val G8 = createPos(7, 8, '!')
   val H8 = createPos(8, 8, '?')
 
-  val all = posCache.toList.flatten
+  override val all = posCache.toList.flatten
 
   override val whiteBackrank = (A1 <-> H1).toList
   override val blackBackrank = (A8 <-> H8).toList
@@ -264,7 +264,7 @@ object CapaBoard extends BoardType {
   override val blackBackrank = (A8 <-> J8).toList
   override val ranks = 8
   override val files = 10
-  val all = posCache.toList.flatten
+  override val all = posCache.toList.flatten
   val allPiotrs: Map[Char, Pos] = all.map { pos => pos.piotr -> pos }(breakOut)
   val allKeys: Map[String, Pos] = all.map { pos => pos.key -> pos }(breakOut)
 }

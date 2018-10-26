@@ -12,6 +12,7 @@ trait BoardType {
   val blackBackrank: List[Pos]
   val ranks: Int
   val files: Int
+  val all: List[Pos]
   def piotr(c: Char): Option[Pos]
 }
 

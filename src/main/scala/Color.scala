@@ -21,6 +21,8 @@ sealed trait Color {
   def rook = this - Rook
   def queen = this - Queen
   def king = this - King
+  def cancellor = this - Cancellor
+  def archbishop = this - Archbishop
 
   val white = this == Color.White
   val black = this == Color.Black

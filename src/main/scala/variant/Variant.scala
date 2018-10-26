@@ -27,6 +27,7 @@ abstract class Variant(
   def horde = this == Horde
   def racingKings = this == RacingKings
   def crazyhouse = this == Crazyhouse
+  def capablanca = this == Capablanca
   def btype: BoardType = boardType
   def exotic = !standard
 
